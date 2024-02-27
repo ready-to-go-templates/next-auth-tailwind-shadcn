@@ -9,7 +9,7 @@ To get started with this project, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/your-repo.git
+   git clone https://github.com/ready-to-go-templates/next-auth-tailwind-shadcn.git
    ```
 
 2. Install dependencies:
