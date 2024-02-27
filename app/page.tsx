@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <>
       <Navbar />
-      <main className="flex justify-center items-center flex-col w-full p-3">
+      <main className="flex justify-center items-center flex-col w-full p-3 h-[60svh]">
         <Hero session={session} />
       </main>
       <Footer />
