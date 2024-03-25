@@ -1,12 +1,7 @@
-"use client"
-import React from 'react'
-
-type Props = {}
+type Props = {};
 
 const Profile = (props: Props) => {
-  return (
-    <div>Profile page</div>
-  )
-}
+  return <div>Profile page</div>;
+};
 
-export default Profile
+export default Profile;

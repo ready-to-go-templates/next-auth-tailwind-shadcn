@@ -3,10 +3,7 @@ import { Session, getServerSession } from "next-auth";
 import Provider from "./Provider";
 import { fonts } from "./fonts";
 import { cn } from "@utils/classname";
-import Navbar from "@components/partials/Navbar";
-import Footer from "@components/partials/Footer";
 import "./globals.css";
-import Wrapper from "./_components/wrapper";
 
 export const metadata: Metadata = {
   title: "Create Next App",

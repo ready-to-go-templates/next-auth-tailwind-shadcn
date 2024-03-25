@@ -1,5 +1,6 @@
 "use client";
 import { ThemeProvider } from "@components/theme-provider";
+import { Toaster } from "@components/ui/toaster";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import React, { PropsWithChildren } from "react";
@@ -17,7 +18,8 @@ const Provider = ({ children, session }: ProviderProps) => {
         enableSystem
         disableTransitionOnChange
       >
-        {children}
+        <main>{children}</main>
+        <Toaster />
       </ThemeProvider>
     </SessionProvider>
   );

@@ -1,53 +1,66 @@
 "use client";
-import React from "react";
-import { signIn, useSession } from "next-auth/react";
+import React, { useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FaGithub } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
 import { Separator } from "@components/ui/separator";
-import { ILoginEntity } from "../auth.interface";
 import { registerSchema } from "../schema";
 import Link from "next/link";
+import { useToast } from "@components/ui/use-toast";
+import { z } from "zod";
 
 type Props = {};
+
+// TODO: remove yup and use zod instead
+
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const Register = (props: Props) => {
   const router = useRouter();
   const session = useSession();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const isAuthenticated = session.status === "authenticated";
+    if (isAuthenticated) {
+      redirect("/");
+    }
+  }, [session]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<RegisterFormValues>({
     reValidateMode: "onSubmit",
-    resolver: yupResolver(registerSchema),
+    resolver: zodResolver(registerSchema),
   });
 
-  const isAuthenticated = session.status === "authenticated";
-  if (isAuthenticated) {
-    redirect("/");
-  }
-
-  const onSubmit: SubmitHandler<ILoginEntity> = async (data) => {
-    const { email, password } = data;
-
-    const res = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
-
-    if (res?.status === 401) {
-      alert("Invalid Credentials");
-    }
-    if (res?.ok) {
-      router.push("/");
+  const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
+    try {
+      await axios.post(
+        "/api/auth/register",
+        {
+          ...data,
+        },
+        { withCredentials: true }
+      );
+      router.push("/login");
+      toast({
+        title: "Signup successful. Login to continue",
+        variant: "successive",
+      });
+    } catch (error: any) {
+      toast({
+        title: error?.message || "Something went wrong please try again later.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -89,28 +102,42 @@ const Register = (props: Props) => {
           error={errors.password?.message}
           placeholder="Enter Password"
           type="password"
-          name="userPassword"
+          name="password"
           label="password"
           className="mb-2 text-lg"
         />
+        <Input
+          {...register("passwordConfirm", { required: true })}
+          error={errors.passwordConfirm?.message}
+          placeholder="Re-enter Password"
+          type="password"
+          name="passwordConfirm"
+          label="Confirm Password"
+          className="mb-2 text-lg"
+        />
         <div className="flex items-center justify-end">
-          <Link className="underline" href="/login">Already have an account?</Link>
+          <Link className="underline" href="/login">
+            Already have an account?
+          </Link>
         </div>
         <div className="mt-4">
           <Button size="lg" className="w-full text-lg" type="submit">
-            Login
+            Signup
           </Button>
           <Separator className="my-4 bg-gray-400" />
           <Button
+            type="button"
             size="lg"
             className="w-full mb-2 flex items-center gap-2 text-lg"
           >
-            {" "}
-            <FcGoogle size="1.6rem" /> Login with Google
+            <FcGoogle size="1.6rem" /> Signup with Google
           </Button>
-          <Button size="lg" className="w-full flex items-center gap-2 text-lg">
-            {" "}
-            <FaGithub size="1.6rem" /> Login with GitHub
+          <Button
+            type="button"
+            size="lg"
+            className="w-full flex items-center gap-2 text-lg"
+          >
+            <FaGithub size="1.6rem" /> Signup with GitHub
           </Button>
         </div>
       </form>

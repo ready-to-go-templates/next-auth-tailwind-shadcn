@@ -1,41 +1,47 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FaGithub } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
 import { Separator } from "@components/ui/separator";
-import { ILoginEntity } from "../auth.interface";
 import { loginSchema } from "../schema";
 import Link from "next/link";
+import { z } from "zod";
 
 type Props = {};
 
-const Login = (props: Props) => {
-  const router = useRouter();
-  const session = useSession();
+type LoginFormValues = z.infer<typeof loginSchema>
 
+const Login = (props: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<LoginFormValues>({
     reValidateMode: "onSubmit",
-    resolver: yupResolver(loginSchema),
+    resolver: zodResolver(loginSchema),
   });
 
+  const router = useRouter();
+  const session = useSession();
+
   const isAuthenticated = session.status === "authenticated";
-  if (isAuthenticated) {
-    redirect("/");
-  }
 
-  const onSubmit: SubmitHandler<ILoginEntity> = async (data) => {
+  useEffect(() => {
+    if (isAuthenticated) {
+      redirect("/");
+    }
+  }, [isAuthenticated, session]);
+
+  const [credError, setCredError] = useState<string>("");
+
+  const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     const { email, password } = data;
-
     const res = await signIn("credentials", {
       redirect: false,
       email,
@@ -43,7 +49,9 @@ const Login = (props: Props) => {
     });
 
     if (res?.status === 401) {
-      alert("Invalid Credentials");
+      setCredError(
+        "Incorrect email or password. Please try again with correct credentials."
+      );
     }
     if (res?.ok) {
       router.push("/");
@@ -70,15 +78,19 @@ const Login = (props: Props) => {
           error={errors.password?.message}
           placeholder="Enter Password"
           type="password"
-          name="userPassword"
+          name="password"
           label="password"
           className="mb-2 text-lg"
         />
+        {credError?.length > 0 && <p className="text-red-500">{credError}</p>}
         <div className="flex items-center justify-between">
-          <Link className="underline" href="/register">
+          <Link className="underline text-muted-foreground" href="/register">
             Don't have an account?
           </Link>
-          <Link className="underline" href="/forgot-password">
+          <Link
+            className="underline text-muted-foreground"
+            href="/forgot-password"
+          >
             Forgot password?
           </Link>
         </div>
@@ -93,7 +105,6 @@ const Login = (props: Props) => {
             className="w-full mb-2 flex items-center gap-2 text-lg"
             onClick={() => signIn("google")}
           >
-            {" "}
             <FcGoogle size="1.6rem" /> Login with Google
           </Button>
           <Button
@@ -102,7 +113,6 @@ const Login = (props: Props) => {
             className="w-full flex items-center gap-2 text-lg"
             onClick={() => signIn("github")}
           >
-            {" "}
             <FaGithub size="1.6rem" /> Login with GitHub
           </Button>
         </div>

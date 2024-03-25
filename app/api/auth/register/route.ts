@@ -1,18 +1,14 @@
+import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import User from "@models/user";
 import dbConnect from "@api/db";
-import bcrypt from "bcryptjs";
-import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
   const { email, password, firstName, lastName } = await req.json();
-
-  console.log("email: ", email);
-
   try {
     await dbConnect();
     const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return new NextResponse("Email is already in user", { status: 400 });
+    if (existingUser) return new NextResponse(`Account with ${email} already exists. Try with another email.`, { status: 400 });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -30,7 +26,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       return new NextResponse("success", { status: 200 });
     }
   } catch (err: any) {
-    return new NextResponse(err, {
+    throw new NextResponse(err, {
       status: 500,
     });
   }

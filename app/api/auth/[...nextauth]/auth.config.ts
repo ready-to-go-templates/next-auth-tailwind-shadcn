@@ -1,16 +1,18 @@
-import type NextAuthConfig from "next-auth";
-import { NextAuthOptions, Account, User as AuthUse } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
-import User from "@models/user";
 import dbConnect from "@api/db";
-import user from "@models/user";
+import User from "@models/user";
 
 export const AuthConfig: NextAuthOptions = {
   pages: {
     signIn: "/login",
+    newUser: "/register",
+  },
+  session: {
+    strategy: 'jwt',
   },
   providers: [
     CredentialsProvider({
@@ -43,8 +45,8 @@ export const AuthConfig: NextAuthOptions = {
         return {
           ...profile,
           role: "GITHUB",
-          firstName: profile?.name?.split(" ")[0],
-          lastName: profile?.name?.split(" ").at(-1),
+          firstName: profile?.name?.split(" ")[0] ?? "",
+          lastName: profile?.name?.split(" ").at(-1) ?? "",
           picture: profile?.avatar_url,
           email: profile?.email,
         };
@@ -85,7 +87,6 @@ export const AuthConfig: NextAuthOptions = {
   callbacks: {
     async signIn({ account, profile, user }: any) {
       if (account?.provider === "credentials") {
-        // console.log(profile);
         return true;
       }
       if (account?.provider === "google") {
