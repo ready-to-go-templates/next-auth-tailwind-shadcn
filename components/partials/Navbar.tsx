@@ -1,17 +1,22 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import { Session } from "next-auth";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
 } from "@components/ui/navigation-menu";
-import { ThemeModeToggle } from "@components/theme-toggle";
 import { Button } from "@components/ui/button";
+import { ThemeModeToggle } from "@components/theme-toggle";
+import { UserMenuToggle } from "@components/user-menu-toggle";
 
-interface NavbarProps {}
+interface NavbarProps {
+  session: Session | null;
+}
 
-const Navbar = (props: NavbarProps) => {
+const Navbar = ({ session }: NavbarProps) => {
+  const isSession = !!session?.user?.email;
   return (
     <NavigationMenu className="my-12 mx-20 p-4 px-6 border-white bg-muted rounded-lg shadow-md">
       <div className="flex items-center justify-between w-screen">
@@ -40,14 +45,18 @@ const Navbar = (props: NavbarProps) => {
 
         <div className="flex items-center justify-end gap-2">
           <ThemeModeToggle />
-          <Link href="/login">
-            <Button variant="outline" className="bg-transparent text-lg">
-              Login
-            </Button>
-          </Link>
-          <Link href="/register">
-            <Button className="text-lg">Register</Button>
-          </Link>
+          {!isSession ? (
+            <>
+              <Link href="/login">
+                <Button variant="outline" className="bg-transparent text-lg">
+                  Login
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button className="text-lg">Register</Button>
+              </Link>
+            </>
+          ) : <UserMenuToggle name={session?.user?.name} image={session?.user?.image || ''} />}
         </div>
       </div>
     </NavigationMenu>

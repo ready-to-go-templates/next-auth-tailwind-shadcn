@@ -18,7 +18,7 @@ const Provider = ({ children, session }: ProviderProps) => {
         enableSystem
         disableTransitionOnChange
       >
-        <main>{children}</main>
+        {children}
         <Toaster />
       </ThemeProvider>
     </SessionProvider>

@@ -8,9 +8,9 @@ export default async function Home() {
 
   return (
     <>
-      <Navbar />
+      <Navbar session={session} />
       <main className="flex justify-center items-center flex-col w-full p-3 h-[60svh]">
-        <Hero session={session} />
+        <Hero />
       </main>
       <Footer />
     </>

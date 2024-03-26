@@ -5,6 +5,7 @@ import Navbar from "@components/partials/Navbar";
 
 interface WrapperProps extends PropsWithChildren {}
 
+//* use this component if you want to change navbar based on routes
 const Wrapper = ({ children }: WrapperProps) => {
   const partialRoutes = ["/login", "/register", "/profile"];
   const currrentPath = window.location.pathname;

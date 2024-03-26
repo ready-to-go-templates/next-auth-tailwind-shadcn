@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Session, getServerSession } from "next-auth";
-import Provider from "./Provider";
+import Provider from "./provider";
 import { fonts } from "./fonts";
 import { cn } from "@utils/classname";
 import "./globals.css";
