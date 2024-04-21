@@ -28,6 +28,7 @@ To get started with this project, follow these steps:
    GOOGLE_CLIENT_SECRET=your_google_client_secret
    GITHUB_CLIENT_ID=your_github_client_id
    GITHUB_CLIENT_SECRET=your_github_client_secret
+   BASEURL=http://localhost:3000
    ```
 
    Replace `your_mongodb_uri`, `your_google_client_id`, `your_google_client_secret`, `your_github_client_id`, and `your_github_client_secret` with your MongoDB connection URI, Google OAuth client ID and secret, and GitHub OAuth client ID and secret respectively.
@@ -45,6 +46,7 @@ To get started with this project, follow these steps:
 - Next.js 14 app route with TypeScript.
 - Tailwind CSS and Shadcn with RadixUI Component library.
 - NextAuth.js for authentication with email, Google, and GitHub providers.
+- React Query for client-side state management.
 - MongoDB with Mongoose.
 
 ## Contributing
