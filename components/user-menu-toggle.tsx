@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 
 import {
@@ -19,9 +18,9 @@ interface UserMenuToggleProps {
 export function UserMenuToggle({ image, name }: UserMenuToggleProps) {
   const router = useRouter();
 
-  const avatarFallback = name
-    ? name.split("")[0][0] + name.split("")[1][0]
-    : "A";
+  const avatarFallback = (
+    name ? name.split("")[0][0] + name.split("")[1][0] : "A"
+  ).toUpperCase();
 
   const handleLogout = () => {
     signOut();
@@ -32,11 +31,17 @@ export function UserMenuToggle({ image, name }: UserMenuToggleProps) {
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
           <AvatarImage src={image} />
-          <AvatarFallback>{avatarFallback}</AvatarFallback>
+          {!Boolean(image) && (
+            <AvatarFallback className="bg-slate-300 text-black">
+              {avatarFallback}
+            </AvatarFallback>
+          )}
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => router.push('/profile')}>Profile Settings</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/profile")}>
+          Profile Settings
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

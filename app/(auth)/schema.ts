@@ -25,3 +25,13 @@ export const registerSchema = z
     message: "Passwords must match",
     path: ["passwordConfirm"],
   });
+
+export const newPasswordSchema = z
+  .object({
+    password: z.string().min(1, "Password is required"),
+    passwordConfirm: z.string().min(1, "Confirm Password is required"),
+  })
+  .refine((schema) => schema.password === schema.passwordConfirm, {
+    message: "Passwords must match",
+    path: ["passwordConfirm"],
+  });

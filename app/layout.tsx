@@ -4,6 +4,7 @@ import Provider from "./provider";
 import { fonts } from "./fonts";
 import { cn } from "@utils/classname";
 import "./globals.css";
+import RTKClientProvider from "@components/rtk-client-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,17 +17,18 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = (await getServerSession()) as Session;
-
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fonts.poppins.variable
-        )}
-      >
-        <Provider session={session}>{children}</Provider>
-      </body>
-    </html>
+    <RTKClientProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans antialiased",
+            fonts.poppins.variable
+          )}
+        >
+          <Provider session={session}>{children}</Provider>
+        </body>
+      </html>
+    </RTKClientProvider>
   );
 }

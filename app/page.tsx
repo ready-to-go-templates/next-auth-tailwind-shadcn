@@ -5,7 +5,6 @@ import Footer from "@components/partials/Footer";
 
 export default async function Home() {
   const session = await getServerSession();
-
   return (
     <>
       <Navbar session={session} />

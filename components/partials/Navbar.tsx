@@ -56,7 +56,12 @@ const Navbar = ({ session }: NavbarProps) => {
                 <Button className="text-lg">Register</Button>
               </Link>
             </>
-          ) : <UserMenuToggle name={session?.user?.name} image={session?.user?.image || ''} />}
+          ) : (
+            <UserMenuToggle
+              name={session?.user?.name}
+              image={session?.user?.image || ""}
+            />
+          )}
         </div>
       </div>
     </NavigationMenu>

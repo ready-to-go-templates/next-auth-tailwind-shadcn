@@ -12,9 +12,9 @@ const Wrapper = ({ children }: WrapperProps) => {
 
   return (
     <>
-      {!partialRoutes.includes(currrentPath) && <Navbar />}
+      {/* {!partialRoutes.includes(currrentPath) && <Navbar />} */}
       {children}
-      {!partialRoutes.includes(currrentPath) && <Footer />}
+      {/* {!partialRoutes.includes(currrentPath) && <Footer />} */}
     </>
   );
 };
